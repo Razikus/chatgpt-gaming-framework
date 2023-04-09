@@ -75,20 +75,20 @@ Version 0 includes
 # Future
 
 Stage 1 - multiple dimension world.
-- [] Possibility to introduce NPCs into the game (Leo, bartendeer, very fat and brave). NPCs should have a summary knowledge from other parts of the world.
-- [] Ability to switch between NPCs during chat (go to tavern talk to Leo)
-- [] Events based on conditions (Player asked Leo to go with him, does it happen? Yes -> burn tavern)
-- [] Make summary of conversation during a game because of current ChatGPT constraints (or change model)
-- [] Introduce new models or replace ChatGPT with something that can be hosted to overcome the limits
-- [] Move and test with GPT-4
+- [ ] Possibility to introduce NPCs into the game (Leo, bartendeer, very fat and brave). NPCs should have a summary knowledge from other parts of the world.
+- [ ] Ability to switch between NPCs during chat (go to tavern talk to Leo)
+- [ ] Events based on conditions (Player asked Leo to go with him, does it happen? Yes -> burn tavern)
+- [ ] Make summary of conversation during a game because of current ChatGPT constraints (or change model)
+- [ ] Introduce new models or replace ChatGPT with something that can be hosted to overcome the limits
+- [ ] Move and test with GPT-4
 
 Stage 2 - inventory and skills
-- [] Possibility to introduce basic inventory to the game and constraints
-- [] Basic skills - you have to learn swimming in order to swim
+- [ ] Possibility to introduce basic inventory to the game and constraints
+- [ ] Basic skills - you have to learn swimming in order to swim
 
 Stage 3 - voice
-- [] Possibility to generate voice to NPCs
-- [] Possibility to steer the game with the voice
+- [ ] Possibility to generate voice to NPCs
+- [ ] Possibility to steer the game with the voice
 
 
 # License
