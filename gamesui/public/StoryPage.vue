@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <q-chat-message v-bind:key="index" v-for="(conversation, index) in filteredConversations" :name="conversation.role"
-      :avatar="conversation.role == 'assistant' ? '/download.png' : '/player.png'" :text="[conversation.content]" :sent="conversation.role != 'assistant'" size="6" >
+      :avatar="conversation.role == 'assistant' ? assistentImage : playerImage" :text="[conversation.content]" :sent="conversation.role != 'assistant'" size="6" >
       <template v-slot:default>
         <p class="conversation">{{ conversation.content }}</p>
       </template>
@@ -217,6 +217,8 @@ export default {
     return {
       route: route,
       router: router,
+      playerImage: playerImage,
+      assistentImage: assistentImage,
       conversations: ref([]),
       storyTeller: ref({}),
       store: store,

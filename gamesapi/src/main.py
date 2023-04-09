@@ -59,7 +59,7 @@ defaultStoryTellers = [
     )
 ]
 
-redisurl = "localhost"
+redisurl = os.environ.get("REDISURL", "localhost")
 apikey = os.environ.get("APIKEY") 
 
 

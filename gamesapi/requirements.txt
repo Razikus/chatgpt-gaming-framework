@@ -1,1 +1,4 @@
-fastapi>=0.92.0
+fastapi==0.95.0
+chatgpt-gaming-framework==0.1.0
+redis==4.5.1
+uvicorn==0.21.1

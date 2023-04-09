@@ -30,14 +30,17 @@
         <q-item-label header>
           Your games
         </q-item-label>
-        <q-item clickable :to="'/story/' + item" v-bind:key="item" v-for="item in conversations">
+        <q-item clickable :to="'/story/' + item.id" v-bind:key="item.id" v-for="item in conversationsDescription">
           <q-item-section avatar>
             <q-icon name="play_circle" />
           </q-item-section>
 
           <q-item-section>
-            <q-item-label>{{ item }}</q-item-label>
+            <q-item-label>{{ item.description }}</q-item-label>
             <q-item-label caption>Click to continue the game</q-item-label>
+          </q-item-section>
+          <q-item-section style="max-width: 30px">
+            <q-btn @click="deleteItem(item.id)" dense style="width: 30px">X</q-btn>
           </q-item-section>
         </q-item>
 
@@ -60,6 +63,7 @@
 import { defineComponent, ref } from 'vue'
 
 import { useQuasar } from 'quasar'
+import { client } from '../boot/axios'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -69,17 +73,46 @@ export default defineComponent({
   methods: {
     startNewGame() {
       this.$router.push('/newgame')
+    },
+    deleteItem(what) {
+      let conversations = window.localStorage.getItem("conversations")
+      if (conversations != null) {
+        let parsedConv = JSON.parse(conversations)
+        let index = parsedConv.indexOf(what)
+        if (index > -1) {
+          parsedConv.splice(index, 1);
+        }
+        window.localStorage.setItem("conversations", JSON.stringify(parsedConv))
+        this.fillConversations()
+      }
+    },
+    async fillConversations() {
+      this.conversationsDescription = []
+      let conversations = window.localStorage.getItem("conversations")
+      if (conversations != null) {
+        let parsedConv = JSON.parse(conversations)
+        for (let index = 0; index < parsedConv.length; index++) {
+          const element = parsedConv[index];
+          let item = await client.getStoryTellerOptions(element)
+          
+          this.conversationsDescription.push({
+            id: element,
+            description: item.data.storyTellerOptions.world.mainGoal
+          })
+
+        }
+        this.conversations = parsedConv
+      }
     }
 
   },
   mounted() {
-    let conversations = window.localStorage.getItem("conversations")
-    if (conversations != null) {
-      let parsedConv = JSON.parse(conversations)
-      this.conversations = parsedConv
-
+    this.fillConversations()
+  },
+  watch: {
+    $route() {
+      this.fillConversations()
     }
-
 
   },
 
@@ -91,6 +124,7 @@ export default defineComponent({
     return {
       leftDrawerOpen,
       conversations: ref([]),
+      conversationsDescription: ref([]),
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value
       }

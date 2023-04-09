@@ -4,13 +4,10 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
-
-requirements = [ "pydantic>=1.9.2", "redis>=4.3.4" ]
+requirements = [ "pydantic>=1.9.2", "redis>=4.3.4", "openai==0.27.2" ]
 
 test_requirements = [ ]
 
@@ -31,7 +28,7 @@ setup(
     description="ChatGPT (in future other LLM) gaming framework",
     install_requires=requirements,
     license="MIT license",
-    long_description=readme + '\n\n' + history,
+    long_description=readme,
     include_package_data=True,
     keywords='chatgpt_gaming_framework',
     name='chatgpt_gaming_framework',
