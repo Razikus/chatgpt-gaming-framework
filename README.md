@@ -5,7 +5,10 @@
 
 My personal fun research on capabilities of ChatGPT and GPT models for gaming
 
-I strongly believe that we can expect some revolution on Non Playable Characters and overall in gaming industry
+I strongly believe that we can expect some revolution on Non Playable Characters and overall in gaming industry with these models.
+
+I'm calling it right now ```Neural Generated Stories``` or ```Neural Playable Characters```
+
 
 ## DEMO
 https://gptgames.razikus.tech/ - I will keep it until some free credits expires
@@ -33,9 +36,10 @@ Your instance will show up on localhost:80
 
 # Target 0
 
-Make a little Proof of Concept to use ChatGPT in order to create a "framework" for creating a text based games in different worlds.
+Make a little Proof of Concept to use ChatGPT in order to create a "framework" for creating a text based games in different worlds with basic constraints.
 
-With filling up some basic parameters framework should be able to generate a Game
+With filling up some basic parameters framework should be able to generate a Game which player can play with.
+
 
 # Architecture
 
@@ -43,7 +47,7 @@ With filling up some basic parameters framework should be able to generate a Gam
 
 Architecture is very easy - main component is Storyteller which is responsible for starting a story, continuing a conversation and parametrize initial prompt.
 
-Model is responsible for continuin a story based on previous conversation.
+Model is responsible for continuing a story based on previous conversation.
 
 Memory is responsible for saving a retrieving conversations.
 
