@@ -104,7 +104,7 @@ async def saveMetadataForConversation(id, redisClient, metadata):
 
 @app.post("/storyteller/start")
 async def startConversation(req: StartConversationRequest, rawRequest: Request):
-    await checkForRateLimit("RT:" + rawRequest.client.host, 60, 399) 
+    await checkForRateLimit("RT:" + rawRequest.client.host, 60, 30) 
     if req.storyTellerOptions is None:
         req.storyTellerOptions = defaultStoryTellers[0]
     model = await getNewStoryTeller(req.storyTellerOptions)
@@ -119,8 +119,8 @@ async def startConversation(req: StartConversationRequest, rawRequest: Request):
 
 @app.post("/storyteller/continue")
 async def continueConversation(req: ConversationRequest, rawRequest: Request):
-    await checkForRateLimit("RT:" + rawRequest.client.host, 60, 3099)
-    await checkForRateLimit("RT:" + req.id, 60, 3990)
+    await checkForRateLimit("RT:" + rawRequest.client.host, 60, 30)
+    await checkForRateLimit("RT:" + req.id, 60, 30)
     model = await getStoryTeller(req.id)
     async def iterit():
         async for item in await model.continueStory(req.id, req.content):
@@ -129,16 +129,16 @@ async def continueConversation(req: ConversationRequest, rawRequest: Request):
 
 @app.post("/storyteller/getForConversation")
 async def getStoryTellerForConversation(req: GetStoryTellerOptions, rawRequest: Request):
-    await checkForRateLimit("RT:" + rawRequest.client.host, 60, 309)
-    await checkForRateLimit("RT:" + req.id, 60, 3099)
+    await checkForRateLimit("RT:" + rawRequest.client.host, 60, 30)
+    await checkForRateLimit("RT:" + req.id, 60, 30)
     model = await getStoryTeller(req.id)
     meta = await model.model.memory.redis.get("STORYTELLER_OPTIONS:" + req.id)
     return StartConversationRequest.parse_raw(meta)
 
 @app.post("/storyteller/getConversation")
 async def getConversation(req: GetConversation, rawRequest: Request):
-    await checkForRateLimit("RT:" + rawRequest.client.host, 60, 309)
-    await checkForRateLimit("RT:" + req.id, 60, 3099)
+    await checkForRateLimit("RT:" + rawRequest.client.host, 60, 30)
+    await checkForRateLimit("RT:" + req.id, 60, 30)
     model = await getStoryTeller(req.id)
     conversation = await model.model.memory.getConversation(req.id)
     return conversation
