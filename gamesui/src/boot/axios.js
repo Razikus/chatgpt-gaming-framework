@@ -22,6 +22,17 @@ class APIClient {
     return response
   }
 
+  async continueStoryTeller(id, text) {
+    let options = {
+      "id": id,
+      "content": text
+    }
+    const response = await fetch(this.apiurl + "/storyteller/continue", {method: "POST", body: JSON.stringify(options), headers: {
+      "Content-Type": "application/json",
+    },})
+    return response
+  }
+
   async getConversation(idOf) {
     return await this.api.post(this.apiurl + "/storyteller/getConversation", {"id": idOf})
   }

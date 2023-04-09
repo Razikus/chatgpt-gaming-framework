@@ -54,6 +54,7 @@ class ChatGPTModel:
         )
         fullText = ""
         messages = conversation.conversations
+        messages.append(Conversation(role="user", content=newMessage))
         if systemMessage:
             messages.insert(-1, Conversation(role="system", content=systemMessage))
         currentRole = conversation.conversations[-1].role

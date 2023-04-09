@@ -1,17 +1,40 @@
 <template>
   <q-page padding>
-      <q-chat-message v-bind:key="index" v-for="(conversation, index) in conversations"
-        :name="conversation.role"
-        avatar="https://cdn.quasar.dev/img/avatar4.jpg"
-        :text="[conversation.content]"
-        sent
-        text-html
-        size="6"
-        stamp="7 minutes ago"
-      />
+    <q-chat-message v-bind:key="index" v-for="(conversation, index) in filteredConversations" :name="conversation.role"
+      avatar="https://cdn.quasar.dev/img/avatar4.jpg" :text="[conversation.content]" :sent="conversation.role != 'assistant'" size="6" stamp="7 minutes ago">
+      <template v-slot:default>
+        <p class="conversation">{{ conversation.content }}</p>
+      </template>
+    </q-chat-message>
+    <q-chat-message name="You" avatar="https://cdn.quasar.dev/img/avatar4.jpg" size="6" sent v-if="!assistantWriting">
+      <template v-slot:default>
+        <div>
+          Choose:
+          <q-btn color="black" @click="continueWith(1)">1)</q-btn>
+          <q-btn color="black" @click="continueWith(2)" style="margin-left: 5px">2)</q-btn>
+          <q-btn color="black" @click="continueWith(3)" style="margin-left: 5px">3)</q-btn>
+          <div style="margin-top: 10px">
+            Or write your own answer:
+            <q-input v-model="ownNewMessage"></q-input>
+
+          </div>
+        </div>
+      </template>
+    </q-chat-message>
+    <q-chat-message name="assistant" avatar="https://cdn.quasar.dev/img/avatar4.jpg" size="6" sent v-else>
+      <template v-slot:default>
+        <p class="conversation">{{ constuctingMessage }}</p>
+      </template>
+    </q-chat-message>
     <!-- content -->
   </q-page>
 </template>
+
+<style>
+.conversation {
+  white-space: pre-line;
+}
+</style>
 
 <script>
 
@@ -29,9 +52,42 @@ export default {
       let conversations = await client.getConversation(this.route.params.id)
       this.storyTeller = storyTellerOptions
       this.conversations = conversations.data.conversations
-      console.log(this.conversations)
-      console.log(conversations)
-      console.log(this.conversations)
+
+    },
+    async continueWith(what) {
+      this.constuctingMessage = ""
+      this.assistantWriting = true
+      let toStr = what.toString()
+      let id = this.route.params.id
+      let response = await client.continueStoryTeller(id, toStr)
+      const reader = response.body.getReader()
+      let that = this
+
+      reader.read().then(function processText({ done, value }) {
+        if (done) {
+          that.conversations.push({
+            role: "assistant",
+            content: that.constuctingMessage
+          })
+          that.assistantWriting = false
+          return;
+        }
+        var decoded = new TextDecoder().decode(value);
+        const splitted = decoded.split(/\r?\n/);
+        for (const stringIndex in splitted) {
+          let string = splitted[stringIndex]
+          try {
+            let parsed = JSON.parse(string)
+            that.constuctingMessage = that.constuctingMessage + parsed.content
+            console.log(parsed)
+
+          } catch (err) {
+
+          }
+        }
+
+        return reader.read().then(processText);
+      });
 
     },
     async createNewStory() {
@@ -61,7 +117,7 @@ export default {
               }
             }
 
-          } catch(err) {
+          } catch (err) {
 
           }
         }
@@ -69,6 +125,13 @@ export default {
         return reader.read().then(processText);
       });
 
+    }
+  },
+  computed: {
+    filteredConversations() {
+      return this.conversations.filter((conversation) => {
+        return conversation.role != "system"
+      })
     }
   },
   mounted() {
@@ -86,7 +149,10 @@ export default {
       route: route,
       conversations: ref([]),
       storyTeller: ref({}),
-      store: store
+      store: store,
+      ownNewMessage: ref(''),
+      assistantWriting: ref(false),
+      constuctingMessage: ref('')
     }
   }
 }
